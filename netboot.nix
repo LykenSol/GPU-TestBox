@@ -30,6 +30,16 @@ let
       environment.systemPackages = with pkgs; [
         vulkan-tools
       ];
+
+      users.users.nixos.openssh.authorizedKeys.keyFiles = attrValues (
+        mapAttrs (user: hash: "${builtins.fetchurl {
+          url = "https://github.com/${user}.keys";
+          sha256 = hash;
+        }}") {
+          # HACK(eddyb) make the list of users configurable.
+          eddyb = "0jlja2icnskalgxn9pzhcn6rvzlypwpv299ayhaf3p59c3p5iahc";
+        }
+      );
     };
   };
 
