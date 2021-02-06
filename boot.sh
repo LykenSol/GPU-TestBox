@@ -5,12 +5,12 @@ set -euo pipefail
 
 nix build -f netboot.nix --out-link ./netboot
 
-init=$(grep -ohP 'init=\S+' ./netboot/netboot.ipxe)
+cmdline=$(grep -o 'init=.*' ./netboot/netboot.ipxe | sed 's/ initrd=initrd//')
 
 # NOTE(eddyb) required configuration, under `networking.firewall`
 # (or `networking.firewall.interfaces.<specific interface name>`):
 #   allowedTCPPorts = [ 42069 ];
 #   allowedUDPPorts = [ 67 69 4011 ];
 sudo pixiecore boot ./netboot/bzImage ./netboot/initrd \
-  --cmdline "$init loglevel=4" \
+  --cmdline "$cmdline" \
   --debug --dhcp-no-bind --port 42069 --status-port 42069
