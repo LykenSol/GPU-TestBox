@@ -3,7 +3,7 @@
 # NOTE(eddyb) most of this is copied from https://nixos.wiki/wiki/Netboot
 set -euo pipefail
 
-nix-build netboot.nix --out-link ./netboot
+nix build -f netboot.nix --out-link ./netboot
 
 init=$(grep -ohP 'init=\S+' ./netboot/netboot.ipxe)
 
